@@ -1,103 +1,221 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useSignalR } from "../hooks/useSignalR";
+
+const MapComponent = dynamic(
+    () => import("../components/MapComponent").then((mod) => ({ default: mod.MapComponent })),
+    { ssr: false, loading: () => <div className="h-96 lg:h-[600px] bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">Loading map...</div> }
+);
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const { isConnected, locations, sendLocation } = useSignalR();
+    const [userMode, setUserMode] = useState<"sender" | "receiver">("sender");
+    const [userName, setUserName] = useState("Default");
+    const [currentLat, setCurrentLat] = useState(25.73736464);
+    const [currentLon, setCurrentLon] = useState(90.3644747);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    const handleSendLocation = () => {
+        sendLocation(currentLat, currentLon, userName);
+    };
+
+    const handleMapClick = (lat: number, lon: number) => {
+        if (userMode === "sender") {
+            setCurrentLat(lat);
+            setCurrentLon(lon);
+        }
+    };
+
+    const handleGetCurrentLocation = () => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setCurrentLat(position.coords.latitude);
+                    setCurrentLon(position.coords.longitude);
+                },
+                (error) => {
+                    console.error("Geolocation error:", error);
+                    alert("Unable to get your location. Please check permissions.");
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4">
+            <div className="max-w-7xl mx-auto">
+                <header className="mb-8">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                        Real-time Location Sharing
+                    </h1>
+                    <div className="flex items-center gap-4">
+                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${isConnected
+                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                : "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                            }`}>
+                            {isConnected ? "Connected" : "Disconnected"}
+                        </span>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                            Active locations: {locations.length}
+                        </span>
+                    </div>
+                </header>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Control Panel */}
+                    <div className="lg:col-span-1 space-y-6">
+                        {/* Mode Selection */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                User Mode
+                            </h2>
+                            <div className="space-y-3">
+                                <label className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="userMode"
+                                        value="sender"
+                                        checked={userMode === "sender"}
+                                        onChange={(e) => setUserMode(e.target.value as "sender" | "receiver")}
+                                        className="mr-3"
+                                    />
+                                    <span className="text-gray-700 dark:text-gray-300">
+                                        User A (Send Location)
+                                    </span>
+                                </label>
+                                <label className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        name="userMode"
+                                        value="receiver"
+                                        checked={userMode === "receiver"}
+                                        onChange={(e) => setUserMode(e.target.value as "sender" | "receiver")}
+                                        className="mr-3"
+                                    />
+                                    <span className="text-gray-700 dark:text-gray-300">
+                                        User B (Receive Location)
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        {/* Sender Controls */}
+                        {userMode === "sender" && (
+                            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                    Send Location
+                                </h2>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                            User Name
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value={userName}
+                                            onChange={(e) => setUserName(e.target.value)}
+                                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                            placeholder="Enter your name"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                Latitude
+                                            </label>
+                                            <input
+                                                type="number"
+                                                step="any"
+                                                value={currentLat}
+                                                onChange={(e) => setCurrentLat(Number(e.target.value))}
+                                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                Longitude
+                                            </label>
+                                            <input
+                                                type="number"
+                                                step="any"
+                                                value={currentLon}
+                                                onChange={(e) => setCurrentLon(Number(e.target.value))}
+                                                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <button
+                                            onClick={handleGetCurrentLocation}
+                                            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors"
+                                        >
+                                            Use My Current Location
+                                        </button>
+                                        <button
+                                            onClick={handleSendLocation}
+                                            disabled={!isConnected}
+                                            className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white rounded-md transition-colors"
+                                        >
+                                            Send Location
+                                        </button>
+                                    </div>
+                                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                                        Tip: Click on the map to set coordinates
+                                    </p>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Active Locations */}
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                Active Locations
+                            </h2>
+                            {locations.length === 0 ? (
+                                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                                    No locations received yet
+                                </p>
+                            ) : (
+                                <div className="space-y-2 max-h-64 overflow-y-auto">
+                                    {locations.map((location, index) => (
+                                        <div
+                                            key={`${location.userName}-${index}`}
+                                            className="p-3 bg-gray-50 dark:bg-gray-700 rounded-md"
+                                        >
+                                            <div className="font-medium text-gray-900 dark:text-white">
+                                                {location.userName}
+                                            </div>
+                                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                                {location.lat.toFixed(6)}, {location.lon.toFixed(6)}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Map */}
+                    <div className="lg:col-span-2">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-gray-200 dark:border-gray-700 h-full">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                                Location Map
+                            </h2>
+                            <div className="h-96 lg:h-[600px]">
+                                <MapComponent
+                                    locations={locations}
+                                    onLocationClick={userMode === "sender" ? handleMapClick : undefined}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }

@@ -13,7 +13,6 @@ interface AboutSectionProps {
     showAboutButton?: boolean
 }
 
-// Gradient Background Component
 const GradientBackground = () => (
     <div className="absolute inset-0 overflow-hidden">
         <svg

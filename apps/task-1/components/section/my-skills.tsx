@@ -28,6 +28,7 @@ const MySkills = () => {
                 </div>
 
                 {/* Carousel here */}
+                {/* Carousel here */}
                 <div className="mt-8 lg:mt-12">
                     <Carousel />
                 </div>

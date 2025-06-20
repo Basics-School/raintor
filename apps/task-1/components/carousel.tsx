@@ -36,32 +36,30 @@ const skills = [
         icon: <MolarIcon className='size-20' />,
         title: "Webflow",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
+    },
+    {
+        id: 6,
+        icon: <MolarIcon className='size-20' />,
+        title: "TypeScript",
+        description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
+    },
+    {
+        id: 7,
+        icon: <MolarIcon className='size-20' />,
+        title: "Next.js",
+        description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     }
-    ,
-        {
-            id: 6,
-            icon: <MolarIcon className='size-20' />,
-            title: "TypeScript",
-            description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
-        },
-        {
-            id: 7,
-            icon: <MolarIcon className='size-20' />,
-            title: "Next.js",
-            description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
-        }
 ]
 
 const Carousel = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
 
-    // Responsive card width and gap
     const getCardWidth = () => {
         if (typeof window !== 'undefined') {
-            if (window.innerWidth < 640) return 280 // Mobile
-            if (window.innerWidth < 768) return 320 // Small tablet
-            if (window.innerWidth < 1024) return 360 // Tablet
-            return 400 // Desktop
+            if (window.innerWidth < 640) return 280
+            if (window.innerWidth < 768) return 320
+            if (window.innerWidth < 1024) return 360
+            return 400
         }
         return 400
     }
@@ -69,7 +67,6 @@ const Carousel = () => {
     const [cardWidth, setCardWidth] = useState(getCardWidth)
     const gap = 24
 
-    // Update card width on resize
     React.useEffect(() => {
         const handleResize = () => {
             setCardWidth(getCardWidth())
@@ -92,14 +89,11 @@ const Carousel = () => {
     }
 
     const translateX = -currentIndex * (cardWidth + gap)
-
-    // Check if buttons should be disabled
     const isAtStart = currentIndex === 0
     const isAtEnd = currentIndex === skills.length - 1
 
     return (
         <div className="relative w-full">
-            {/* Navigation buttons */}
             <div className="flex justify-end gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <button
                     onClick={handlePrevious}
@@ -129,11 +123,9 @@ const Carousel = () => {
                 </button>
             </div>
 
-            {/* Cards container */}
-            <div className="relative  ">
-                {/* Scrollable cards container */}
+            <div className="relative">
                 <div className="flex justify-center px-8 sm:px-12 lg:px-20">
-                    <div className="w-full  ">
+                    <div className="w-full">
                         <motion.div
                             className="flex gap-4 sm:gap-6"
                             animate={{
@@ -168,7 +160,6 @@ const Carousel = () => {
                 </div>
             </div>
 
-            {/* Dots indicator */}
             <div className="flex justify-center gap-1.5 sm:gap-2 mt-6 sm:mt-8">
                 {skills.map((_, index) => (
                     <button

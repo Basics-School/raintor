@@ -13,6 +13,15 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+    "test": {
+      "dependsOn": ["^test"],
+      "inputs": [
+        "src/**/*.{js,jsx,ts,tsx}",
+        "**/*.test.{js,jsx,ts,tsx}",
+        "jest.config.js",
+        "jest.setup.js"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true
