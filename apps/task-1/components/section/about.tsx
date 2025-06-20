@@ -78,7 +78,7 @@ const NavButton = ({ children, variant = 'icon', onClick }: {
         onClick={onClick}
         className={`
             rounded-full border-2 border-foreground hover:bg-background text-foreground
-            transition-all duration-300 font-medium text-black bg-transparent backdrop-blur-sm
+            transition-all duration-300 font-medium bg-transparent backdrop-blur-sm
             ${variant === 'icon' ? 'p-3' : 'px-6 py-3'}
         `}
     >
@@ -159,7 +159,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
             <div className="relative z-10 mx-auto max-w-xxl px-6 lg:px-18 py-20">
                 {/* Top Navigation Buttons */}
                 {(showScrollButton || showAboutButton) && (
-                    <div className="flex justify-end items-center space-x-4 mb-20">
+                    <div className="flex justify-end items-center  mb-20">
                         {showScrollButton && (
                             <NavButton variant="icon">
                                 <ArrowDown size={20} />

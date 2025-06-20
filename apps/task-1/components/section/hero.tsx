@@ -1,6 +1,5 @@
-import { Button } from "@workspace/ui/components/button";
-import { CallIcon } from "@workspace/ui/components/icons/call-icon";
 import { SocialLinks } from "@/components/layout/social-links";
+import ScheduleCallButton from "@/components/ui/schedule-call-button";
 
 export default function Hero() {
     return (
@@ -45,13 +44,7 @@ export default function Hero() {
                                 Your trusted partner for strategy, design, and dev.
                             </p>
 
-                            <Button
-                                size="lg"
-                                className="w-min cursor-pointer py-10 px-0"
-                            >
-                                <CallIcon />
-                                <span className="pr-4">Schedule a Call</span>
-                            </Button>
+                            <ScheduleCallButton />
                         </div>
                     </div>
                 </div>

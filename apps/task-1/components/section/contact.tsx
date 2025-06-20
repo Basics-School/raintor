@@ -1,5 +1,6 @@
 import React from 'react'
-import { ChevronDown, Phone } from 'lucide-react'
+import { ChevronDown } from 'lucide-react'
+import ScheduleCallButton from '@/components/ui/schedule-call-button'
 
 interface ContactSectionProps {
   titleStart?: string
@@ -68,25 +69,6 @@ const HighlightedText = ({ children }: { children: React.ReactNode }) => (
   <span className="bg-black text-white px-4 py-2 rounded-lg inline-block mx-2">
     {children}
   </span>
-)
-
-// Schedule Call Button Component
-const ScheduleCallButton = ({ children, onClick }: {
-  children: React.ReactNode
-  onClick?: () => void
-}) => (
-  <button
-    onClick={onClick}
-    className="
-      flex items-center gap-3 px-8 py-4 rounded-full border-2 border-black 
-      bg-white/90 backdrop-blur-sm text-black font-medium text-lg
-      hover:bg-black hover:text-white transition-all duration-300
-      shadow-lg hover:shadow-xl transform hover:scale-105
-    "
-  >
-    <Phone size={20} />
-    {children}
-  </button>
 )
 
 // Contact Hero Text Component
