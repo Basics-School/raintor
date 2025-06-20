@@ -24,7 +24,7 @@ export default function Header() {
   return (
     <header
       className={cn(
-        "top-0  mx-auto left-0 right-0 z-50 transition-all duration-300",
+        "top-0 relative mx-auto left-0 right-0 z-50 transition-all duration-300",
         isScrolled
           ? "fixed bg-background/80 backdrop-blur-md border-b border-border/40"
           : "bg-transparent"
