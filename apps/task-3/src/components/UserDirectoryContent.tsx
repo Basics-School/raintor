@@ -8,23 +8,38 @@ import { userService } from "../services/userService";
 import { UserCard } from "../components/UserCard";
 import { UserCardSkeleton } from "../components/UserCardSkeleton";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
+import { ServerApiResponse } from "../lib/server-actions";
 
 const ITEMS_PER_PAGE = 10;
 const ITEM_HEIGHT = 400;
 
-export function UserDirectoryContent() {
+interface UserDirectoryContentProps {
+    initialData: ServerApiResponse;
+    initialParams: {
+        page: number;
+        limit: number;
+        useVirtualization: boolean;
+    };
+    serverError: string | null;
+}
+
+export function UserDirectoryContent({
+    initialData,
+    initialParams,
+    serverError
+}: UserDirectoryContentProps) {
     // URL state management with nuqs
     const [useVirtualization, setUseVirtualization] = useQueryState(
         "virtualization",
-        parseAsBoolean.withDefault(false) // Default to false as requested
+        parseAsBoolean.withDefault(initialParams.useVirtualization)
     );
     const [pageParam, setPageParam] = useQueryState(
         "page",
-        parseAsInteger.withDefault(1)
+        parseAsInteger.withDefault(initialParams.page)
     );
     const [limitParam, setLimitParam] = useQueryState(
         "limit",
-        parseAsInteger.withDefault(ITEMS_PER_PAGE)
+        parseAsInteger.withDefault(initialParams.limit)
     );
 
     const {
@@ -42,15 +57,51 @@ export function UserDirectoryContent() {
         setHasNextPage,
         incrementPage,
         resetPagination,
+        setTotalCount,
     } = useUserStore();
 
     const [listHeight, setListHeight] = useState(600);
     const [virtualizationError, setVirtualizationError] = useState<string | null>(null);
+    const [isInitialized, setIsInitialized] = useState(false);
 
-    // Load initial data
+    // Initialize store with server-side data
     useEffect(() => {
-        loadUsers(true);
-    }, [limitParam]); // Re-load when limit changes
+        if (!isInitialized) {
+            if (serverError) {
+                setError(serverError);
+            } else {
+                setUsers(initialData.users);
+                setHasNextPage(initialData.hasNextPage);
+                setTotalCount(initialData.totalCount);
+                // Set the current page to match the server-side page
+                resetPagination();
+                for (let i = 1; i < initialParams.page; i++) {
+                    incrementPage();
+                }
+                clearError();
+            }
+            setIsInitialized(true);
+        }
+    }, [
+        isInitialized,
+        initialData,
+        serverError,
+        setUsers,
+        setHasNextPage,
+        setTotalCount,
+        setError,
+        clearError,
+        resetPagination,
+        incrementPage,
+        initialParams.page,
+    ]);
+
+    // Load additional data when parameters change (but not on initial load)
+    useEffect(() => {
+        if (isInitialized && limitParam !== initialParams.limit) {
+            loadUsers(true);
+        }
+    }, [limitParam, isInitialized, initialParams.limit]);
 
     // Update list height based on window size
     useEffect(() => {
@@ -71,7 +122,7 @@ export function UserDirectoryContent() {
             clearError();
             setVirtualizationError(null);
 
-            const skip = isInitialLoad ? 0 : currentPage * limitParam;
+            const skip = isInitialLoad ? 0 : (currentPage + 1) * limitParam;
             const response = await userService.getUsers(limitParam, skip);
 
             if (isInitialLoad) {
@@ -85,6 +136,7 @@ export function UserDirectoryContent() {
             }
 
             setHasNextPage(response.hasNextPage);
+            setTotalCount(response.totalCount);
         } catch (error) {
             setError(error instanceof Error ? error.message : "Failed to load users");
         } finally {

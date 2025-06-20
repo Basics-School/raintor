@@ -1,4 +1,5 @@
 import { User } from "../store/userStore";
+import { fetchUsersClientSide } from "../lib/server-actions";
 
 export interface ApiResponse {
   users: User[];
@@ -6,32 +7,14 @@ export interface ApiResponse {
   hasNextPage: boolean;
 }
 
-interface ApiData {
-  users: User[];
-  total: number;
-  skip: number;
-  limit: number;
-}
-
-const BASE_URL = "https://tech-test.raintor.com/api/users";
-
 export const userService = {
   async getUsers(take: number = 10, skip: number = 0): Promise<ApiResponse> {
     try {
-      const response = await fetch(
-        `${BASE_URL}/GetUsersList?take=${take}&skip=${skip}`
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data: ApiData = await response.json();
-
+      const response = await fetchUsersClientSide(take, skip);
       return {
-        users: data.users || [],
-        totalCount: data.total || 0,
-        hasNextPage: data.users.length === take && skip + take < data.total,
+        users: response.users,
+        totalCount: response.totalCount,
+        hasNextPage: response.hasNextPage,
       };
     } catch (error) {
       console.error("Failed to fetch users:", error);
