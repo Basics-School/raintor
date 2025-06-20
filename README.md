@@ -415,11 +415,13 @@ This project is optimized for deployment on platforms like Vercel or Netlify:
 
 ### Live Demo
 
-[Insert deployment URL here]
+• Task 1: https://raintor-task-1.vercel.app
+• Task 2: https://raintor-task-2-snowy.vercel.app
+• Task 3: https://raintor-task-3-kohl.vercel.app
 
 ### Repository
 
-[Insert GitHub repository URL here]
+https://github.com/ktisakib/raintor
 
 ---
 
