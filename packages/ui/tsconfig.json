@@ -6,6 +6,6 @@
       "@workspace/ui/*": ["./src/*"]
     }
   },
-  "include": ["."],
+  "include": [".", "../../apps/task-1/components/skill-card.tsx", "../../apps/task-1/components/carousel.tsx"],
   "exclude": ["node_modules", "dist"]
 }

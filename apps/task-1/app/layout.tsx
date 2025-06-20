@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import Header from "@/components/layout/header";
+import Footer from "@/components/layout/footer";
 
 const sportingGrotesque = localFont({
     src: [
@@ -33,10 +34,11 @@ export default function RootLayout({
             >
                 <Providers>
                     <Header />
-                    <main className="absolute -z-10  top-0 w-full
+                    <main className=" -z-10  top-0 w-full
                     ">
                         {children}
                     </main>
+                    <Footer />
                 </Providers>
             </body>
         </html>

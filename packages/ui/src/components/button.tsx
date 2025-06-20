@@ -5,34 +5,17 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@workspace/ui/lib/utils"
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+    "inline-flex items-center justify-center gap-4 whitespace-nowrap rounded-full text-base font-medium transition-all duration-200 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-5 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] bg-transparent border border-foreground dark:border-white hover:bg-foreground/10 dark:hover:bg-white/10 text-foreground dark:text-white shadow-lg",
     {
         variants: {
-            variant: {
-                default:
-                    "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-                destructive:
-                    "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
-                outline:
-                    "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground",
-                secondary:
-                    "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-                ghost: "hover:bg-accent hover:text-accent-foreground",
-                link: "text-primary underline-offset-4 hover:underline",
-                brutal:
-                    "bg-transparent border border-foreground dark:border-white rounded-full hover:bg-foreground/10 dark:hover:bg-white/10 text-foreground dark:text-white font-medium shadow-lg transition-all duration-200 [&_svg]:size-5 gap-4",
-            },
             size: {
-                default: "h-9 px-4 py-2 has-[>svg]:px-3",
-                sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-                lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-                icon: "size-9",
-                "brutal-sm": "h-10 px-3 py-2",
-                "brutal-lg": "h-12 px-6 py-3 rounded-full",
+                sm: "h-10 px-4 py-2 gap-2 text-sm [&_svg]:size-4",
+                default: "h-12 px-6 py-3",
+                lg: "h-14 px-8 py-4 gap-6 text-lg [&_svg]:size-6",
+                icon: "size-12 px-0",
             },
         },
         defaultVariants: {
-            variant: "default",
             size: "default",
         },
     }
@@ -40,7 +23,6 @@ const buttonVariants = cva(
 
 function Button({
     className,
-    variant,
     size,
     asChild = false,
     ...props
@@ -53,48 +35,10 @@ function Button({
     return (
         <Comp
             data-slot="button"
-            className={cn(buttonVariants({ variant, size, className }))}
+            className={cn(buttonVariants({ size, className }))}
             {...props}
         />
     )
 }
 
-// Call Icon Component
-function CallIcon({ className, variant = "default" }: { className?: string, variant?: "default" | "icon-only" | "minimal" }) {
-    const iconContent = (
-        <svg
-            width="20"
-            height="20"
-            viewBox="0 0 20 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className={className}
-        >
-            <path
-                d="M19.97 16.33C19.97 16.69 19.89 17.06 19.72 17.42C19.55 17.78 19.33 18.12 19.04 18.44C18.55 18.98 18.01 19.37 17.4 19.62C16.8 19.87 16.15 20 15.45 20C14.43 20 13.34 19.76 12.19 19.27C11.04 18.78 9.89 18.12 8.75 17.29C7.6 16.45 6.51 15.52 5.47 14.49C4.44 13.45 3.51 12.36 2.68 11.22C1.86 10.08 1.2 8.94 0.72 7.81C0.24 6.67 0 5.58 0 4.54C0 3.86 0.12 3.21 0.36 2.61C0.6 2 0.98 1.44 1.51 0.94C2.15 0.31 2.85 0 3.59 0C3.87 0 4.15 0.0600001 4.4 0.18C4.66 0.3 4.89 0.48 5.07 0.74L7.39 4.01C7.57 4.26 7.7 4.49 7.79 4.71C7.88 4.92 7.93 5.13 7.93 5.32C7.93 5.56 7.86 5.8 7.72 6.03C7.59 6.26 7.4 6.5 7.16 6.74L6.4 7.53C6.29 7.64 6.24 7.77 6.24 7.93C6.24 8.01 6.25 8.08 6.27 8.16C6.3 8.24 6.33 8.3 6.35 8.36C6.53 8.69 6.84 9.12 7.28 9.64C7.73 10.16 8.21 10.69 8.73 11.22C9.27 11.75 9.79 12.24 10.32 12.69C10.84 13.13 11.27 13.43 11.61 13.61C11.66 13.63 11.72 13.66 11.79 13.69C11.87 13.72 11.95 13.73 12.04 13.73C12.21 13.73 12.34 13.67 12.45 13.56L13.21 12.81C13.46 12.56 13.7 12.37 13.93 12.25C14.16 12.11 14.39 12.04 14.64 12.04C14.83 12.04 15.03 12.08 15.25 12.17C15.47 12.26 15.7 12.39 15.95 12.56L19.26 14.91C19.52 15.09 19.7 15.3 19.81 15.55C19.91 15.8 19.97 16.05 19.97 16.33Z"
-                fill="currentColor"
-            />
-        </svg>
-    );
-
-    if (variant === "minimal") {
-        return iconContent;
-    }
-
-    if (variant === "icon-only") {
-        return (
-            <div className="border border-foreground dark:border-white rounded-full p-2">
-                {iconContent}
-            </div>
-        );
-    }
-
-    // Default variant with more padding
-    return (
-        <div className="border border-foreground dark:border-white rounded-full p-3">
-            {iconContent}
-        </div>
-    );
-}
-
-export { Button, buttonVariants, CallIcon }
+export { Button, buttonVariants }

@@ -23,19 +23,19 @@ export function ThemeToggle() {
     if (!mounted) {
         return (
             <Button
-                variant="ghost"
+
                 size="icon"
                 className="size-9"
                 disabled
             >
-                <div className="size-4" />
+                <div className="size-8" />
             </Button>
         )
     }
 
     return (
         <Button
-            variant="ghost"
+
             size="icon"
             onClick={toggleTheme}
             className={cn(
@@ -45,9 +45,9 @@ export function ThemeToggle() {
             aria-label="Toggle theme"
         >
             {theme === "dark" ? (
-                <SunIcon className="size-4" />
+                <SunIcon className="size-8" />
             ) : (
-                <MoonIcon className="size-4" />
+                <MoonIcon className="size-8" />
             )}
         </Button>
     )
