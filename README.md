@@ -206,19 +206,47 @@ A modern, responsive portfolio website featuring:
 
 ### Task 2: Real-time Location Sharing
 
-Real-time location sharing interface with:
+Production-ready real-time location sharing interface with robust connection handling:
 
 - **SignalR Hub**: `https://tech-test.raintor.com/Hub`
-- **Custom Hook**: `useSignalR()` encapsulates all WebSocket logic
+- **Custom Hook**: `useSignalR()` encapsulates all WebSocket logic with connection state management
 - **Dual UI Modes**: User A (sender) and User B (receiver)
 - **Interactive Map**: Leaflet-based with click-to-set coordinates
 - **GPS Integration**: Browser geolocation API support
 - **Real-time Updates**: Live marker updates on location changes
+- **Production UX**: Connection status indicators, loading states, and error handling
+
+#### Enhanced Production Features
+
+**Connection Management**:
+
+- **Reconnect Button**: Manual reconnection when SignalR is disconnected
+- **Connection States**: Visual indicators for connected, connecting, and disconnected states
+- **Error Handling**: Connection error display and recovery mechanisms
+- **Demo Mode**: Automatic fallback to local demo mode if SignalR hub is unavailable
+
+**Loading States**:
+
+- **Send Location Loading**: Spinner animation while sending location data
+- **Map Markers**: Red pin for sender's current location, blue pins for received locations
+- **Connection Status**: Real-time status updates with color-coded indicators
+
+#### Demo Mode
+
+If the SignalR hub is unavailable (common in development or when the external service is down), the app automatically switches to **Demo Mode**:
+
+- **Status**: Shows "Demo Mode" with orange badge
+- **Functionality**: Location sharing works locally within the browser session
+- **Demo Data**: Pre-populated with sample locations for testing
+- **Reconnection**: "Try Reconnect" button attempts to restore SignalR connection
+
+> **Note**: Demo mode allows full testing of UI features without requiring external SignalR connectivity.
 
 #### SignalR Implementation
 
 - **Send Method**: `SendLatLon(lat, lon, userName)`
 - **Receive Method**: `ReceiveLatLon`
+- **Connection Events**: Automatic reconnection handling with manual override
 - **Payload Format**:
 
 ```json
@@ -324,7 +352,8 @@ cd apps/task-3 && pnpm test --watch
 
 ### Task 2 (Location Sharing)
 
-- SignalR connection may require CORS configuration in production
+- ~~SignalR connection may require CORS configuration in production~~ ✅ **Improved**: Added reconnection handling and connection status
+- ~~Manual reconnection required on disconnection~~ ✅ **Fixed**: Automatic reconnection with manual override button
 - Geolocation requires HTTPS in production environments
 - Map performance could be optimized for mobile devices with large datasets
 
@@ -354,6 +383,26 @@ cd apps/task-3 && pnpm test --watch
 - **Accessibility First**: Virtualization disabled by default, keyboard navigation support
 - **Progressive Enhancement**: Features work without JavaScript where possible
 - **Package Management**: pnpm workspace filters for targeted dependency management
+
+## Troubleshooting
+
+### Task 2: SignalR Connection Issues
+
+**Problem**: "Failed to complete negotiation with the server: TypeError: Failed to fetch"
+
+**Solutions**:
+
+1. **Check Network**: Ensure internet connectivity to `https://tech-test.raintor.com/Hub`
+2. **Demo Mode**: App automatically falls back to demo mode if SignalR is unavailable
+3. **CORS Issues**: Use the "Try Reconnect" button or refresh the page
+4. **Firewall/Proxy**: Corporate networks may block WebSocket connections
+
+**Demo Mode Features**:
+
+- Orange "Demo Mode" status badge
+- Local location sharing (works within browser session)
+- Pre-populated sample locations for testing
+- All UI features remain functional
 
 ## Deployment
 
