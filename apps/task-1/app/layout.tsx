@@ -34,7 +34,7 @@ export default function RootLayout({
             >
                 <Providers>
                     <Header />
-                    <main className=" -z-10  top-0 w-full
+                    <main className=" -z-10 -mt-20  top-0 w-full
                     ">
                         {children}
                     </main>

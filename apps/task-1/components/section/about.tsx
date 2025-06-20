@@ -48,23 +48,24 @@ const GradientBackground = () => (
 )
 
 // Company Badge Component
-const CompanyBadge = ({ name, isHighlighted = false, className = "" }: {
-    name: string;
-    isHighlighted?: boolean;
+const CompanyBadge = ({ name, variant = 'light', className = "", children }: {
+    name?: string;
+    variant?: 'light' | 'dark';
     className?: string;
+    children?: React.ReactNode;
 }) => (
     <div
         className={`
-            px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105
-            border-2 relative
-            ${isHighlighted
-                ? 'bg-black text-white border-black shadow-lg'
-                : 'bg-white/95 backdrop-blur-sm text-black border-gray-300 hover:bg-white shadow-md'
+            px-6 py-4 rounded-full text-base font-medium transition-all duration-300 hover:scale-105
+            relative shadow-lg backdrop-blur-sm
+            ${variant === 'dark'
+                ? 'bg-gray-900/95 text-white border border-gray-700'
+                : 'bg-white/95 text-gray-900 border border-gray-200'
             }
             ${className}
         `}
     >
-        {name}
+        {children || name}
     </div>
 )
 
@@ -105,7 +106,7 @@ const HeroText = ({
     secondaryText: string
     highlightedYear: string
 }) => (
-    <h1 className="text-4xl sm:text-5xl md:text-7xl  font-bold text-right leading-tight mb-8">
+    <h1 className="text-4xl sm:text-5xl md:text-7xl  font-bold text-right leading-24 mb-8">
         <span className="text-foreground">{mainText} </span>
         <HighlightedText>{highlightedWord}</HighlightedText>
         <br />
@@ -122,19 +123,33 @@ const CompaniesSection = ({
     previouslyWorkedText: string
     companies: string[]
 }) => (
-    <div className="flex flex-col items-start max-w-4xl mx-auto">
-        <h3 className="text-foreground font-bold text-sm tracking-wider mb-8 backdrop-blur-sm">
+    <div className="max-w-5xl mx-auto">
+        <h3 className="text-foreground font-bold text-xl tracking-wider mb-12 text-left">
             {previouslyWorkedText}
         </h3>
 
-        <div className="flex flex-wrap gap-4 items-center">
-            {companies.map((company, index) => (
-                <CompanyBadge
-                    key={index}
-                    name={company}
-                    isHighlighted={company === "awwwards."}
-                />
-            ))}
+        {/* Organic curved layout inspired by the image */}
+        <div className="relative min-h-[350px] w-full">
+            {/* Top row - left aligned */}
+            <div className="absolute top-0 left-0 lg:left-16 flex gap-6 z-10">
+                <CompanyBadge name="awwwards." variant="dark" />
+                <CompanyBadge name="facebook" variant="light" />
+            </div>
+
+            {/* Middle row - center-right positioned */}
+            <div className="absolute top-20 left-1/3 lg:left-1/2 transform -translate-x-1/4 lg:-translate-x-1/2 flex gap-6 z-20">
+                <CompanyBadge name="/thoughtworks" variant="light" />
+                <CompanyBadge variant="light" className="flex items-center gap-1">
+                    <span className="text-xl font-bold">S</span>
+                    <span>CSSDesign</span><span className="font-bold">Awards</span>
+                </CompanyBadge>
+            </div>
+
+            {/* Bottom row - right aligned with offset */}
+            <div className="absolute top-40 right-0 lg:right-16 flex gap-6 z-10">
+                <CompanyBadge name="CSS WINNER" variant="light" />
+                <CompanyBadge name="AUTODESK" variant="light" className="font-bold tracking-wide" />
+            </div>
         </div>
     </div>
 )
@@ -184,7 +199,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                             highlightedYear={highlightedYear}
                         />
 
-                        <p className="text-muted-foreground text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
+                        <p className="text-foreground text-base sm:text-lg md:text-xl max-w-3xl mx-auto leading-relaxed">
                             {description}
                         </p>
                     </div>

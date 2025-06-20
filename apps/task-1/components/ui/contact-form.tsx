@@ -84,9 +84,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ className = "", onSubmit }) =
                     <Button
                         type="submit"
                         size="lg"
-                        className="w-min cursor-pointer py-10 px-0"
+                        className="w-min cursor-pointer py-4 px-0"
                     >
-                        <Send size={20} />
+                        <span className='rounded-full border border-foreground p-2'>
+                        <Send size={20} /></span>
                         <span className="pr-4">Send</span>
                     </Button>
 
@@ -95,9 +96,10 @@ const ContactForm: React.FC<ContactFormProps> = ({ className = "", onSubmit }) =
                     <Button
                         type="button"
                         size="lg"
-                        className="w-min cursor-pointer py-10 px-0"
+                        className="w-min cursor-pointer py-4 px-0"
                     >
-                        <Mail size={20} />
+                        <span className='rounded-full border border-foreground p-2'>
+                        <Mail size={20} /></span>
                         <span className="pr-4">Contact me</span>
                     </Button>
                 </div>

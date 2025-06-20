@@ -56,8 +56,8 @@ const NavButton = ({ children, variant = 'icon', onClick }: {
     <button
         onClick={onClick}
         className={`
-      rounded-full border-2 border-black hover:bg-black hover:text-white
-      transition-all duration-300 font-medium text-black bg-white/80 backdrop-blur-sm
+      rounded-full border-2 border-foreground hover:bg-foreborder-foreground hover:text-white
+      transition-all duration-300 font-medium text-foreborder-foreground  backdrop-blur-sm
       ${variant === 'icon' ? 'p-3' : 'px-6 py-3'}
     `}
     >
@@ -67,7 +67,7 @@ const NavButton = ({ children, variant = 'icon', onClick }: {
 
 // Highlighted Text Component for Contact
 const HighlightedText = ({ children }: { children: React.ReactNode }) => (
-    <span className="bg-black text-white px-4 py-2 rounded-lg inline-block mx-2">
+    <span className="bg-foreborder-foreground text-white px-4 py-2 rounded-lg inline-block mx-2">
         {children}
     </span>
 )
@@ -82,7 +82,7 @@ const ContactHeroText = ({
     highlightedWord: string
     titleEnd: string
 }) => (
-    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight mb-8 text-black">
+    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl  font-bold leading-tight mb-8 text-foreground">
         <span>{titleStart} </span>
         <br />
         <HighlightedText>{highlightedWord}</HighlightedText>
@@ -100,7 +100,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
     showContactButton = true
 }) => {
     return (
-        <section className="relative min-h-screen bg-gradient-to-br from-cyan-50 via-green-50 to-lime-100 overflow-hidden">
+        <section className="relative min-h-screen  overflow-hidden">
             {/* Contact Gradient Background */}
             <ContactGradientBackground />
 
@@ -108,7 +108,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
             <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 py-12 lg:py-20">
                 {/* Top Navigation Buttons */}
                 {(showScrollButton || showContactButton) && (
-                    <div className="flex justify-start items-center space-x-4 mb-12 lg:mb-20">
+                    <div className="flex justify-start items-center  mb-12 lg:mb-20">
                         {showScrollButton && (
                             <NavButton variant="icon">
                                 <ChevronDown size={20} />
@@ -123,7 +123,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                 )}
 
                 {/* Main Content */}
-                <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+                <div className="flex  justify-between">
                     {/* Left Side - Hero Text */}
                     <div className="lg:max-w-2xl">
                         <ContactHeroText
@@ -132,7 +132,7 @@ const ContactSection: React.FC<ContactSectionProps> = ({
                             titleEnd={titleEnd}
                         />
 
-                        <p className="text-black/70 text-lg md:text-xl max-w-2xl leading-relaxed mb-12">
+                        <p className="text-foreground text-lg md:text-xl max-w-2xl leading-relaxed mb-12">
                             {description}
                         </p>
 
