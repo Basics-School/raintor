@@ -1,163 +1,179 @@
 'use client'
 
 import React, { useState } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion } from 'motion/react'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import SkillCard from './skill-card'
 import { MolarIcon } from '@workspace/ui/components/icons/molar-icon'
-
-
-// Atom icon component (similar to the React-style icon in the design)
-
 
 const skills = [
     {
         id: 1,
         icon: <MolarIcon className='size-20' />,
-        title: "HTML & CSS",
+        title: "React",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     },
     {
         id: 2,
         icon: <MolarIcon className='size-20' />,
-        title: "Javascript",
+        title: "Node.js",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     },
     {
         id: 3,
         icon: <MolarIcon className='size-20' />,
-        title: "Webflow",
+        title: "HTML & CSS",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     },
     {
         id: 4,
         icon: <MolarIcon className='size-20' />,
-        title: "React",
+        title: "Javascript",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     },
     {
         id: 5,
         icon: <MolarIcon className='size-20' />,
-        title: "Node.js",
+        title: "Webflow",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     }
 ]
 
 const Carousel = () => {
     const [currentIndex, setCurrentIndex] = useState(0)
-    const [direction, setDirection] = useState(0)
 
-    const slideVariants = {
-        hiddenRight: {
-            x: "100%",
-            opacity: 0,
-        },
-        hiddenLeft: {
-            x: "-100%",
-            opacity: 0,
-        },
-        visible: {
-            x: "0",
-            opacity: 1,
-            transition: {
-                duration: 0.5,
-            }
-        },
-        exit: {
-            opacity: 0,
-            scale: 0.8,
-            transition: {
-                duration: 0.3
-            }
+    // Responsive card width and gap
+    const getCardWidth = () => {
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth < 640) return 280 // Mobile
+            if (window.innerWidth < 768) return 320 // Small tablet
+            if (window.innerWidth < 1024) return 360 // Tablet
+            return 400 // Desktop
         }
+        return 400
     }
 
+    const [cardWidth, setCardWidth] = useState(getCardWidth)
+    const gap = 24
+
+    // Update card width on resize
+    React.useEffect(() => {
+        const handleResize = () => {
+            setCardWidth(getCardWidth())
+        }
+
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
     const handleNext = () => {
-        setDirection(1)
         setCurrentIndex((prevIndex) =>
-            prevIndex + 1 >= skills.length ? 0 : prevIndex + 1
+            prevIndex + 1 >= skills.length ? prevIndex : prevIndex + 1
         )
     }
 
     const handlePrevious = () => {
-        setDirection(-1)
         setCurrentIndex((prevIndex) =>
-            prevIndex - 1 < 0 ? skills.length - 1 : prevIndex - 1
+            prevIndex - 1 < 0 ? prevIndex : prevIndex - 1
         )
     }
 
-    const getVisibleCards = () => {
-        const cards = []
-        for (let i = 0; i < 3; i++) {
-            const index = (currentIndex + i) % skills.length
-            cards.push(skills[index])
-        }
-        return cards
-    }
+    const translateX = -currentIndex * (cardWidth + gap)
+
+    // Check if buttons should be disabled
+    const isAtStart = currentIndex === 0
+    const isAtEnd = currentIndex === skills.length - 1
 
     return (
-        <div className="relative w-full  ">
+        <div className="relative w-full">
             {/* Navigation buttons */}
-            <div className="flex justify-end gap-4 mb-8">
+            <div className="flex justify-end gap-3 sm:gap-4 mb-6 sm:mb-8">
                 <button
                     onClick={handlePrevious}
-                    className="w-12 h-12 rounded-full border border-background/30 hover:border-background/60 transition-colors duration-200 flex items-center justify-center group"
+                    disabled={isAtStart}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-colors duration-200 flex items-center justify-center group ${
+                        isAtStart 
+                            ? 'border-background/10 cursor-not-allowed' 
+                            : 'border-background/30 hover:border-background/60'
+                    }`}
                 >
-                    <ArrowLeft className="w-6 h-6 text-background group-hover:text-background/80 transition-colors duration-200" />
+                    <ArrowLeft className={`w-4 h-4 sm:w-6 sm:h-6 transition-colors duration-200 ${
+                        isAtStart 
+                            ? 'text-background/20' 
+                            : 'text-background group-hover:text-background/80'
+                    }`} />
                 </button>
                 <button
                     onClick={handleNext}
-                    className="w-12 h-12 rounded-full border border-background/30 hover:border-background/60 transition-colors duration-200 flex items-center justify-center group"
+                    disabled={isAtEnd}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-colors duration-200 flex items-center justify-center group ${
+                        isAtEnd 
+                            ? 'border-background/10 cursor-not-allowed' 
+                            : 'border-background/30 hover:border-background/60'
+                    }`}
                 >
-                    <ArrowRight className="w-6 h-6 text-background group-hover:text-background/80 transition-colors duration-200" />
+                    <ArrowRight className={`w-4 h-4 sm:w-6 sm:h-6 transition-colors duration-200 ${
+                        isAtEnd 
+                            ? 'text-background/20' 
+                            : 'text-background group-hover:text-background/80'
+                    }`} />
                 </button>
             </div>
 
-            {/* Cards container */}
-            <div className="relative h-[320px] overflow-x-hidden">
-                <motion.div
-                    className="flex gap-6 absolute inset-0"
-                    key={currentIndex}
-                    initial={direction > 0 ? "hiddenRight" : "hiddenLeft"}
-                    animate="visible"
-                    exit="exit"
-                    variants={slideVariants}
-                >
-                    {getVisibleCards().map((skill, index) => {
-                        if (!skill) return null
-                        return (
-                            <div
-                                key={`${skill.id}-${currentIndex}-${index}`}
-                                className="flex-shrink-0"
-                                style={{
-                                    transform: index === 1 ? 'scale(1.05)' : 'scale(0.95)',
-                                    zIndex: index === 1 ? 10 : 1,
-                                    opacity: index === 1 ? 1 : 0.7
-                                }}
-                            >
-                                <SkillCard
-                                    icon={skill.icon}
-                                    title={skill.title}
-                                    description={skill.description}
-                                />
-                            </div>
-                        )
-                    })}
-                </motion.div>
+            {/* Cards container with gradient shadows */}
+            <div className="relative overflow-x-hidden">
+                {/* Left gradient shadow */}
+                <div className="absolute left-0 top-0 w-8 sm:w-12 lg:w-20 h-full bg-gradient-to-r from-foreground to-transparent z-10 pointer-events-none" />
+
+                {/* Right gradient shadow */}
+                <div className="absolute right-0 top-0 w-8 sm:w-12 lg:w-20 h-full bg-gradient-to-l from-foreground to-transparent z-10 pointer-events-none" />
+
+                {/* Scrollable cards container */}
+                <div className="flex justify-center px-8 sm:px-12 lg:px-20">
+                    <div className="w-full max-w-6xl overflow-x-hidden">
+                        <motion.div
+                            className="flex gap-4 sm:gap-6"
+                            animate={{
+                                x: translateX
+                            }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 30
+                            }}
+                        >
+                            {skills.map((skill, index) => (
+                                <div
+                                    key={skill.id}
+                                    className="flex-shrink-0"
+                                    style={{
+                                        width: `${cardWidth}px`,
+                                        transform: index === currentIndex ? 'scale(1.05)' : 'scale(0.95)',
+                                        zIndex: index === currentIndex ? 10 : 1,
+                                        opacity: index === currentIndex ? 1 : 0.7
+                                    }}
+                                >
+                                    <SkillCard
+                                        icon={skill.icon}
+                                        title={skill.title}
+                                        description={skill.description}
+                                    />
+                                </div>
+                            ))}
+                        </motion.div>
+                    </div>
+                </div>
             </div>
 
             {/* Dots indicator */}
-            <div className="flex justify-center gap-2 mt-8">
+            <div className="flex justify-center gap-1.5 sm:gap-2 mt-6 sm:mt-8">
                 {skills.map((_, index) => (
                     <button
                         key={index}
-                        onClick={() => {
-                            setDirection(index > currentIndex ? 1 : -1)
-                            setCurrentIndex(index)
-                        }}
-                        className={`w-2 h-2 rounded-full transition-colors duration-200 ${index === currentIndex
-                            ? 'bg-background'
-                            : 'bg-background/30 hover:bg-background/50'
+                        onClick={() => setCurrentIndex(index)}
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors duration-200 ${index === currentIndex
+                                ? 'bg-background'
+                                : 'bg-background/30 hover:bg-background/50'
                             }`}
                     />
                 ))}

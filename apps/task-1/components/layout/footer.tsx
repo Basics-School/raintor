@@ -52,7 +52,7 @@ const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
           {/* Contact Section */}
-          <h3 className="col-span-full row-start-1 col-start-2 text-white text-6xl lg:text-7xl font-bold leading-tight">
+          <h3 className="col-span-full row-start-1 col-start-2 text-background text-6xl lg:text-7xl font-bold leading-tight">
             {tagline}
           </h3>{" "}
           <div className="col-span-full flex justify-between  col-start-2 row-start-2">
@@ -62,10 +62,10 @@ const Footer: React.FC<FooterProps> = ({
                   Say hello
                 </h4>
                 <div className="space-y-2">
-                  <p className="text-white font-medium tracking-wide">
+                  <p className="text-background font-medium tracking-wide">
                     {email}
                   </p>
-                  <p className="text-white font-medium tracking-wide">
+                  <p className="text-background font-medium tracking-wide">
                     {alternateEmail}
                   </p>
                 </div>
@@ -79,7 +79,7 @@ const Footer: React.FC<FooterProps> = ({
                   {phones.map((phone, index) => (
                     <p
                       key={index}
-                      className="text-white font-medium tracking-wide"
+                      className="text-background font-medium tracking-wide"
                     >
                       {phone}
                     </p>
@@ -97,7 +97,7 @@ const Footer: React.FC<FooterProps> = ({
                   <Link
                     key={index}
                     href={item.href}
-                    className="block text-white font-medium tracking-wide hover:text-lime-400 transition-colors duration-200"
+                    className="block text-background font-medium tracking-wide hover:text-lime-400 transition-colors duration-200"
                   >
                     {item.label}
                   </Link>
@@ -114,7 +114,7 @@ const Footer: React.FC<FooterProps> = ({
                   <Link
                     key={index}
                     href={social.href}
-                    className="block text-white font-medium tracking-wide hover:text-lime-400 transition-colors duration-200"
+                    className="block text-background font-medium tracking-wide hover:text-lime-400 transition-colors duration-200"
                   >
                     {social.platform}
                   </Link>
@@ -141,7 +141,7 @@ const Footer: React.FC<FooterProps> = ({
                 <React.Fragment key={index}>
                   <Link
                     href={link.href}
-                    className="text-gray-400 text-sm hover:text-white transition-colors duration-200"
+                    className="text-gray-400 text-sm hover:text-background transition-colors duration-200"
                   >
                     {link.label}
                   </Link>
