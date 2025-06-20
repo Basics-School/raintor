@@ -6,6 +6,8 @@ interface UserCardProps {
 }
 
 export const UserCard = ({ user, style }: UserCardProps) => {
+    const fullName = `${user.firstName} ${user.lastName}`;
+
     return (
         <div
             style={style}
@@ -14,16 +16,27 @@ export const UserCard = ({ user, style }: UserCardProps) => {
             <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                        {user.name}
+                        {fullName}
                     </h3>
                     <p className="text-sm text-gray-600 dark:text-gray-400">
                         {user.email}
                     </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-500">
+                        @{user.username} • {user.role}
+                    </p>
                 </div>
-                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                    <span className="text-blue-600 dark:text-blue-300 font-medium text-lg">
-                        {user.name.charAt(0).toUpperCase()}
-                    </span>
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center overflow-hidden">
+                    {user.image ? (
+                        <img
+                            src={user.image}
+                            alt={fullName}
+                            className="w-full h-full object-cover"
+                        />
+                    ) : (
+                        <span className="text-blue-600 dark:text-blue-300 font-medium text-lg">
+                            {user.firstName.charAt(0).toUpperCase()}
+                        </span>
+                    )}
                 </div>
             </div>
 
@@ -33,15 +46,12 @@ export const UserCard = ({ user, style }: UserCardProps) => {
                     {user.phone}
                 </div>
                 <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                    <span className="font-medium mr-2">🌐</span>
-                    <a
-                        href={`https://${user.website}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                        {user.website}
-                    </a>
+                    <span className="font-medium mr-2">�</span>
+                    Age: {user.age} • {user.gender}
+                </div>
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <span className="font-medium mr-2">🎓</span>
+                    {user.university}
                 </div>
             </div>
 
@@ -53,11 +63,11 @@ export const UserCard = ({ user, style }: UserCardProps) => {
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         {user.company.name}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 italic">
-                        "{user.company.catchPhrase}"
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                        {user.company.title} • {user.company.department}
                     </p>
                     <p className="text-xs text-gray-500 dark:text-gray-500">
-                        {user.company.bs}
+                        {user.company.address.city}, {user.company.address.state}
                     </p>
                 </div>
             </div>
@@ -67,11 +77,11 @@ export const UserCard = ({ user, style }: UserCardProps) => {
                     Address
                 </h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {user.address.suite} {user.address.street}<br />
-                    {user.address.city}, {user.address.zipcode}
+                    {user.address.city}, {user.address.state} {user.address.postalCode}<br />
+                    {user.address.country}
                 </p>
                 <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                    📍 {user.address.geo.lat}, {user.address.geo.lng}
+                    📍 {user.address.coordinates.lat}, {user.address.coordinates.lng}
                 </p>
             </div>
         </div>

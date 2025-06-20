@@ -6,6 +6,13 @@ export interface ApiResponse {
   hasNextPage: boolean;
 }
 
+interface ApiData {
+  users: User[];
+  total: number;
+  skip: number;
+  limit: number;
+}
+
 const BASE_URL = "https://tech-test.raintor.com/api/users";
 
 export const userService = {
@@ -19,12 +26,12 @@ export const userService = {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data: ApiData = await response.json();
 
       return {
-        users: data || [],
-        totalCount: data.length || 0,
-        hasNextPage: data.length === take, // If we got exactly what we asked for, there might be more
+        users: data.users || [],
+        totalCount: data.total || 0,
+        hasNextPage: data.users.length === take && skip + take < data.total,
       };
     } catch (error) {
       console.error("Failed to fetch users:", error);

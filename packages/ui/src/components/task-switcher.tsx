@@ -7,7 +7,7 @@ const tasks = [
         id: 1,
         name: "Portfolio",
         path: process.env.NODE_ENV === "production"
-            ? "https://raintor-task-3-kohl.vercel.app"
+            ? "https://raintor-task-1.vercel.app"
             : "http://localhost:3001"
     },
     {
@@ -21,7 +21,7 @@ const tasks = [
         id: 3,
         name: "User Feed",
         path: process.env.NODE_ENV === "production"
-            ? "https://raintor-task-4.vercel.app"
+            ? "https://raintor-task-3-kohl.vercel.app"
             : "http://localhost:3003"
     },
 ];
