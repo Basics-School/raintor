@@ -37,6 +37,19 @@ const skills = [
         title: "Webflow",
         description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
     }
+    ,
+        {
+            id: 6,
+            icon: <MolarIcon className='size-20' />,
+            title: "TypeScript",
+            description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
+        },
+        {
+            id: 7,
+            icon: <MolarIcon className='size-20' />,
+            title: "Next.js",
+            description: "Duis aute irure dolor in reprehenderit in voluptate. Ut enim ad minim veniam, quis"
+        }
 ]
 
 const Carousel = () => {
@@ -91,46 +104,36 @@ const Carousel = () => {
                 <button
                     onClick={handlePrevious}
                     disabled={isAtStart}
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-colors duration-200 flex items-center justify-center group ${
-                        isAtStart 
-                            ? 'border-background/10 cursor-not-allowed' 
-                            : 'border-background/30 hover:border-background/60'
-                    }`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-colors duration-200 flex items-center justify-center group ${isAtStart
+                        ? 'border-background/10 cursor-not-allowed'
+                        : 'border-background/30 hover:border-background/60'
+                        }`}
                 >
-                    <ArrowLeft className={`w-4 h-4 sm:w-6 sm:h-6 transition-colors duration-200 ${
-                        isAtStart 
-                            ? 'text-background/20' 
-                            : 'text-background group-hover:text-background/80'
-                    }`} />
+                    <ArrowLeft className={`w-4 h-4 sm:w-6 sm:h-6 transition-colors duration-200 ${isAtStart
+                        ? 'text-background/20'
+                        : 'text-background group-hover:text-background/80'
+                        }`} />
                 </button>
                 <button
                     onClick={handleNext}
                     disabled={isAtEnd}
-                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-colors duration-200 flex items-center justify-center group ${
-                        isAtEnd 
-                            ? 'border-background/10 cursor-not-allowed' 
-                            : 'border-background/30 hover:border-background/60'
-                    }`}
+                    className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-colors duration-200 flex items-center justify-center group ${isAtEnd
+                        ? 'border-background/10 cursor-not-allowed'
+                        : 'border-background/30 hover:border-background/60'
+                        }`}
                 >
-                    <ArrowRight className={`w-4 h-4 sm:w-6 sm:h-6 transition-colors duration-200 ${
-                        isAtEnd 
-                            ? 'text-background/20' 
-                            : 'text-background group-hover:text-background/80'
-                    }`} />
+                    <ArrowRight className={`w-4 h-4 sm:w-6 sm:h-6 transition-colors duration-200 ${isAtEnd
+                        ? 'text-background/20'
+                        : 'text-background group-hover:text-background/80'
+                        }`} />
                 </button>
             </div>
 
-            {/* Cards container with gradient shadows */}
-            <div className="relative overflow-x-hidden">
-                {/* Left gradient shadow */}
-                <div className="absolute left-0 top-0 w-8 sm:w-12 lg:w-20 h-full bg-gradient-to-r from-foreground to-transparent z-10 pointer-events-none" />
-
-                {/* Right gradient shadow */}
-                <div className="absolute right-0 top-0 w-8 sm:w-12 lg:w-20 h-full bg-gradient-to-l from-foreground to-transparent z-10 pointer-events-none" />
-
+            {/* Cards container */}
+            <div className="relative  ">
                 {/* Scrollable cards container */}
                 <div className="flex justify-center px-8 sm:px-12 lg:px-20">
-                    <div className="w-full max-w-6xl overflow-x-hidden">
+                    <div className="w-full  ">
                         <motion.div
                             className="flex gap-4 sm:gap-6"
                             animate={{
@@ -148,7 +151,7 @@ const Carousel = () => {
                                     className="flex-shrink-0"
                                     style={{
                                         width: `${cardWidth}px`,
-                                        transform: index === currentIndex ? 'scale(1.05)' : 'scale(0.95)',
+                                        transform: index === currentIndex ? 'rotate(-2deg)' : 'scale(0.95)',
                                         zIndex: index === currentIndex ? 10 : 1,
                                         opacity: index === currentIndex ? 1 : 0.7
                                     }}
@@ -172,8 +175,8 @@ const Carousel = () => {
                         key={index}
                         onClick={() => setCurrentIndex(index)}
                         className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-colors duration-200 ${index === currentIndex
-                                ? 'bg-background'
-                                : 'bg-background/30 hover:bg-background/50'
+                            ? 'bg-background'
+                            : 'bg-background/30 hover:bg-background/50'
                             }`}
                     />
                 ))}

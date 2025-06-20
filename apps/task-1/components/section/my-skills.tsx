@@ -4,7 +4,7 @@ import Carousel from '../carousel'
 
 const MySkills = () => {
     return (
-        <section className='bg-foreground mx-4 sm:mx-6 lg:mx-7 space-y-8 lg:space-y-12 rounded-4xl -mt-20 px-4 sm:px-6 md:px-8 lg:px-18 text-background py-16 sm:py-20 lg:py-24 relative z-10'>
+        <section className='bg-foreground mx-4 overflow-hidden sm:mx-6 lg:mx-7 space-y-8 lg:space-y-12 rounded-4xl -mt-20 px-4 sm:px-6 md:px-8 lg:px-18 text-background py-16 sm:py-20 lg:py-24 relative z-10'>
             <div className="max-w-7xl mx-auto">
                 <div className='flex flex-col sm:flex-row items-start sm:items-center gap-4'>
                     <span className='border border-background p-3 sm:p-4 rounded-full flex-shrink-0'>
