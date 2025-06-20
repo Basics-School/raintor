@@ -17,13 +17,15 @@ This project showcases three different frontend implementations built with Next.
 - **Language**: TypeScript
 - **Real-time Communication**: SignalR (@microsoft/signalr)
 - **State Management**: Zustand
+- **URL State Management**: nuqs (for server-side URL state)
 - **Data Fetching**: Custom fetch with React Query patterns
 - **Maps**: Leaflet & React-Leaflet
-- **Virtualization**: react-window
+- **Virtualization**: react-window (optional with error handling)
 - **Testing**: Jest + React Testing Library
 - **Animation**: Framer Motion
 - **Build System**: Turbo (monorepo)
 - **Package Manager**: pnpm
+- **Error Handling**: Next.js App Router error boundaries
 
 ## Project Structure
 
@@ -74,6 +76,53 @@ cd raintor
 pnpm install
 ```
 
+### Package Management
+
+This project uses pnpm workspaces for monorepo management. You can manage packages for specific tasks using filters:
+
+#### Adding Packages
+
+```bash
+# Add a package to a specific task
+pnpm add <package-name> --filter task-1
+pnpm add <package-name> --filter task-2
+pnpm add <package-name> --filter task-3
+
+# Add dev dependencies
+pnpm add -D <package-name> --filter task-1
+
+# Add packages to the UI workspace
+pnpm add <package-name> --filter @workspace/ui
+
+# Add packages to all workspaces
+pnpm add <package-name> -w
+```
+
+#### Removing Packages
+
+```bash
+# Remove a package from a specific task
+pnpm remove <package-name> --filter task-1
+pnpm remove <package-name> --filter task-2
+pnpm remove <package-name> --filter task-3
+
+# Remove from UI workspace
+pnpm remove <package-name> --filter @workspace/ui
+```
+
+#### Examples
+
+```bash
+# Add lodash to task-1 only
+pnpm add lodash --filter task-1
+
+# Add testing library to task-3
+pnpm add -D @testing-library/user-event --filter task-3
+
+# Remove a package from task-2
+pnpm remove axios --filter task-2
+```
+
 3. Start all development servers:
 
 ```bash
@@ -119,6 +168,30 @@ Each task runs on a different port and includes a floating task switcher button 
 
 The task switcher is implemented as a shared component in the UI package and provides seamless navigation for reviewers.
 
+## Error Handling & User Experience
+
+The application implements comprehensive error handling following Next.js App Router best practices:
+
+### Application-Level Error Boundaries
+
+- **Global Error Boundary**: `error.tsx` catches and displays application errors
+- **Graceful Degradation**: Virtualization errors automatically fall back to grid view
+- **Development vs Production**: Detailed error information in development, user-friendly messages in production
+- **Error Recovery**: Multiple recovery options (retry, reload, fallback views)
+
+### Loading States
+
+- **Suspense Boundaries**: Proper loading states for async components
+- **Skeleton Loaders**: Animated placeholders during data fetching
+- **Progressive Loading**: Smooth transitions between loading and loaded states
+
+### User Feedback
+
+- **Real-time Status**: Live indicators for loading, error, and ready states
+- **Visual Cues**: Color-coded status messages and error indicators
+- **Keyboard Shortcuts**: Ctrl+R for refresh, accessible navigation
+- **URL State Persistence**: User preferences saved in URL for better UX
+
 ## Task Details
 
 ### Task 1: Portfolio Website
@@ -158,23 +231,64 @@ Real-time location sharing interface with:
 
 ### Task 3: Infinite Scroll User Feed
 
-Advanced user directory with infinite scrolling:
+Advanced user directory with infinite scrolling and modern UI features:
 
 - **API Endpoint**: `https://tech-test.raintor.com/api/users/GetUsersList?take=10&skip=0`
 - **State Management**: Zustand store for user data and UI state
+- **URL State Management**: Server-side state with nuqs for URL parameters
 - **Infinite Scrolling**: IntersectionObserver-based loading
-- **Virtualization**: Optional react-window integration for performance
-- **Component Architecture**: Modular UserCard components
+- **Virtualization**: Optional react-window integration with error handling
+- **Component Architecture**: Modular UserCard components with Suspense boundaries
 - **Error Handling**: Comprehensive error states and retry mechanisms
 - **Accessibility**: Keyboard navigation support (Ctrl+R to refresh)
 
+#### Enhanced UI Features
+
+**URL State Management**:
+
+- Virtualization toggle: `?virtualization=true/false` (default: false)
+- Items per page: `?limit=5,10,20,50` (default: 10)
+- Current page: `?page=1,2,3...` (default: 1)
+- Example: `?virtualization=true&page=2&limit=20`
+
+**Virtualization with Error Handling**:
+
+- Toggle between grid view and virtualized list
+- Graceful error handling with fallback to grid view
+- Visual error indicators that don't break the application
+- Automatic error recovery options
+
+**Error Boundaries**:
+
+- Next.js App Router `error.tsx` for application-level errors
+- Component-level error handling for virtualization failures
+- Detailed error information in development mode
+- User-friendly error messages in production
+
+**Performance Controls**:
+
+- Dynamic items per page selection (5, 10, 20, 50)
+- Real-time performance indicators
+- Memory-efficient virtualization
+- Responsive grid layouts for all screen sizes
+
+#### UI Components
+
+- **UserDirectoryContent**: Main component wrapped in Suspense
+- **UserCard**: Individual user display with contact information
+- **UserCardSkeleton**: Loading state with animate-pulse
+- **Error Boundary**: Application-level error handling
+- **Loading Component**: Suspense fallback UI
+
 #### Features
 
-- Skeleton loading states
-- Error boundaries with retry functionality
+- Skeleton loading states with proper animation
+- Error boundaries with retry functionality and development details
 - Performance monitoring (virtualized vs. regular rendering)
-- Responsive grid layout
-- Real-time loading indicators
+- Responsive grid layout with mobile-first design
+- Real-time loading indicators and status updates
+- URL-based state persistence for better UX
+- Keyboard shortcuts and accessibility features
 
 ## Testing
 
@@ -188,7 +302,23 @@ Test coverage includes:
 - Component rendering and props handling
 - State management logic
 - Hook functionality
-- Error scenarios
+- Error scenarios and error boundary testing
+- URL state management with nuqs
+- Virtualization error handling
+
+### Running Tests by Workspace
+
+```bash
+# Run tests for specific tasks
+pnpm test --filter task-2
+pnpm test --filter task-3
+
+# Run all tests
+pnpm test
+
+# Run tests in watch mode
+cd apps/task-3 && pnpm test --watch
+```
 
 ## Known Limitations & Trade-offs
 
@@ -201,8 +331,10 @@ Test coverage includes:
 ### Task 3 (User Feed)
 
 - API pagination relies on simple skip/take parameters
-- Virtualization is optional due to potential accessibility trade-offs
+- Virtualization is optional and disabled by default for better accessibility
 - Real-time user count may not reflect actual API total due to API limitations
+- URL state management requires JavaScript for full functionality
+- Some virtualization features may have reduced performance on older devices
 
 ### General
 
@@ -217,6 +349,11 @@ Test coverage includes:
 - **TypeScript**: Strict typing throughout with proper interface definitions
 - **Component Architecture**: Modular, reusable components with clear separation of concerns
 - **Performance**: Conscious trade-offs between features and performance (virtualization, lazy loading)
+- **Error Boundaries**: Next.js App Router error handling with graceful degradation
+- **URL State Management**: Server-side state persistence using nuqs for better UX
+- **Accessibility First**: Virtualization disabled by default, keyboard navigation support
+- **Progressive Enhancement**: Features work without JavaScript where possible
+- **Package Management**: pnpm workspace filters for targeted dependency management
 
 ## Deployment
 
