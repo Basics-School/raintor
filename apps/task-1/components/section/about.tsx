@@ -1,5 +1,5 @@
 import React from 'react'
-import { ChevronDown } from 'lucide-react'
+import { ArrowDown, ChevronDown } from 'lucide-react'
 
 interface AboutSectionProps {
     mainText?: string
@@ -48,8 +48,8 @@ const GradientBackground = () => (
 )
 
 // Company Badge Component
-const CompanyBadge = ({ name, isHighlighted = false, className = "" }: { 
-    name: string; 
+const CompanyBadge = ({ name, isHighlighted = false, className = "" }: {
+    name: string;
     isHighlighted?: boolean;
     className?: string;
 }) => (
@@ -77,8 +77,8 @@ const NavButton = ({ children, variant = 'icon', onClick }: {
     <button
         onClick={onClick}
         className={`
-            rounded-full border-2 border-black hover:bg-black hover:text-white
-            transition-all duration-300 font-medium text-black bg-white/80 backdrop-blur-sm
+            rounded-full border-2 border-foreground hover:bg-background text-foreground
+            transition-all duration-300 font-medium text-black bg-transparent backdrop-blur-sm
             ${variant === 'icon' ? 'p-3' : 'px-6 py-3'}
         `}
     >
@@ -105,7 +105,7 @@ const HeroText = ({
     secondaryText: string
     highlightedYear: string
 }) => (
-    <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-bold leading-tight mb-8">
+    <h1 className="text-4xl sm:text-5xl md:text-7xl  font-bold text-right leading-tight mb-8">
         <span className="text-foreground">{mainText} </span>
         <HighlightedText>{highlightedWord}</HighlightedText>
         <br />
@@ -162,7 +162,7 @@ const AboutSection: React.FC<AboutSectionProps> = ({
                     <div className="flex justify-end items-center space-x-4 mb-20">
                         {showScrollButton && (
                             <NavButton variant="icon">
-                                <ChevronDown size={20} />
+                                <ArrowDown size={20} />
                             </NavButton>
                         )}
                         {showAboutButton && (
