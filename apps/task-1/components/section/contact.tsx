@@ -67,7 +67,7 @@ const NavButton = ({ children, variant = 'icon', onClick }: {
 
 // Highlighted Text Component for Contact
 const HighlightedText = ({ children }: { children: React.ReactNode }) => (
-    <span className="bg-foreborder-foreground text-white px-4 py-2 rounded-lg inline-block mx-2">
+    <span className="bg-foreground border-foreground text-background px-4 py-2 rounded-lg inline-block mx-2">
         {children}
     </span>
 )
