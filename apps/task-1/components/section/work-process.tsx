@@ -55,7 +55,7 @@ export default function WorkProcessSection() {
                             key={process.title}
                             title={process.title}
                             description={process.description}
-                            isStrategy={process.isStrategy}
+                            
                             className={`transition-all duration-300 hover:z-10 ${index % 2 === 0 ? "lg:hover:-rotate-1" : "lg:hover:rotate-1"
                                 }`}
                         />
